@@ -1,14 +1,21 @@
 import { MongoClient } from "mongodb";
 
-const password = encodeURIComponent(process.env.MONGO_PASSWORD.trim());
-const connectionString = `mongodb+srv://integrationninjas:${password}@devcluster.hu5pjmi.mongodb.net/?retryWrites=true&w=majority`; // cluster url
-const client = new MongoClient(connectionString);
-let conn;
+
+// Create Mongo Client using URI from .env
+const client = new MongoClient(process.env.MONGO_URI);
+
+let db;
+
 try {
-  conn = await client.connect();
-  console.log("connection successful")
-} catch(e) {
-  console.error(e);
+  // Connect to MongoDB Atlas
+  const conn = await client.connect();
+  console.log("✅ MongoDB Connected Successfully");
+
+  // Select your database name
+  db = conn.db("gkdb");
+
+} catch (error) {
+  console.error("❌ MongoDB Connection Error:", error);
 }
-let db = conn.db("integration_ninjas");
+
 export default db;
