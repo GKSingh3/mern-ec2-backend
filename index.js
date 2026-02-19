@@ -31,9 +31,10 @@ app.post('/addUser', async (req, res) => {
     let newDocument = req.body;
     newDocument.date = new Date();
     let result = await collection.insertOne(newDocument);
-    console.log("rreq" + req.body);
+    console.log("req" + req.body);
     res.send(result).status(204);
 });
+
 
 app.get('/getUsers', async (req, res) => {
     let collection = await db.collection("user");
