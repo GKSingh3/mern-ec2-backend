@@ -1,30 +1,41 @@
 name: Deploy Node Application
 
-on: 
+on:
   push:
     branches:
-      - mern-ec2-deployement
+      - mern-ec2-backend
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
-      - name: Login to docker hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}     
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Build Docker Image
-        run: docker build -t integrationninjas/nodejs-app  .
-      - name: Publish Image to docker hub
-        run: docker push integrationninjas/nodejs-app:latest 
- 
+        run: docker build -t gksingh341998/ec2-node-backend:latest .
+
+      - name: Push Image to Docker Hub
+        run: docker push gksingh341998/ec2-node-backend:latest
+
   deploy:
     needs: build
-    runs-on: self-hosted 
+    runs-on: self-hosted
+
     steps:
-      - name: Pull image from docker hub
-        run: docker pull integrationninjas/nodejs-app:latest 
-      - name: Delete old container
-        run: docker rm -f nodejs-app-container  
-      - name: Run Docker Container
-        run: docker run -d -p 4000:4000 --name nodejs-app-container -e MONGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' integrationninjas/nodejs-app
+      - name: Pull Latest Image
+        run: docker pull gksingh341998/ec2-node-backend:latest
+
+      - name: Remove Old Container
+        run: docker rm -f nodejs-app-container || true
+
+      - name: Run New Container
+        run: |
+          docker run -d -p 4000:4000 \
+          --name nodejs-app-container \
+          -e MONGO_URI=${{ secrets.MONGO_URI }} \
+          gksingh341998/ec2-node-backend:latest
