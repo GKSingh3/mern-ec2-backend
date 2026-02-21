@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 dotenv.config();
 
-import db from "./mongoC.js";
+// import db from "./mongoC.js";
 
 const port = 4000;
 const app = express();
@@ -26,21 +26,21 @@ app.get('/', (req, res) => {
     res.send('Hello World, from express');
 })
 
-app.post('/addUser', async (req, res) => {
-    let collection = await db.collection("users");
-    let newDocument = req.body;
-    newDocument.date = new Date();
-    let result = await collection.insertOne(newDocument);
-    console.log("req" + req.body);
-    res.send(result).status(204);
-});
+// app.post('/addUser', async (req, res) => {
+//     let collection = await db.collection("users");
+//     let newDocument = req.body;
+//     newDocument.date = new Date();
+//     let result = await collection.insertOne(newDocument);
+//     console.log("req" + req.body);
+//     res.send(result).status(204);
+// });
 
 
-app.get('/getUsers', async (req, res) => {
-    let collection = await db.collection("user");
-    let results = await collection.find({}).toArray();
-    res.send(results).status(200);
-});
+// app.get('/getUsers', async (req, res) => {
+//     let collection = await db.collection("user");
+//     let results = await collection.find({}).toArray();
+//     res.send(results).status(200);
+// });
 
 app.listen(port, function () {
     console.log("Server is listening at port:" + port);
